@@ -46,7 +46,7 @@ public class MessagePackWritable implements WritableComparable<MessagePackWritab
     public byte[] getRawBytes() {
         try {
             return msgPack.write(val_);
-        } catch (IOException ioe) { return null; }
+        } catch (IOException ioe) { throw new RuntimeException(ioe); }
     }
     
     public void write(DataOutput out) throws IOException {

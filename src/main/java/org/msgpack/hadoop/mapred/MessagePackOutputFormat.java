@@ -25,10 +25,8 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.FSDataOutputStream;
-import org.apache.hadoop.mapred.InputSplit;
 import org.apache.hadoop.mapred.RecordWriter;
 import org.apache.hadoop.mapred.JobConf;
-import org.apache.hadoop.mapred.Reporter;
 import org.apache.hadoop.mapred.FileOutputFormat;
 import org.apache.hadoop.util.Progressable;
 

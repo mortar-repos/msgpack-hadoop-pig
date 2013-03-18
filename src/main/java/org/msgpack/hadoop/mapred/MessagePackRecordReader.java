@@ -21,7 +21,6 @@ package org.msgpack.hadoop.mapred;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -32,11 +31,12 @@ import org.apache.hadoop.mapred.FileSplit;
 import org.apache.hadoop.io.LongWritable;
 
 import org.msgpack.MessagePack;
-import org.msgpack.Unpacker;
-import org.msgpack.MessagePackObject;
+import org.msgpack.unpacker.Unpacker;
+import org.msgpack.type.Value;
 import org.msgpack.hadoop.io.MessagePackWritable;
 
 public class MessagePackRecordReader implements RecordReader<LongWritable, MessagePackWritable> {
+    private MessagePack msgPack_ = new MessagePack();
     private Unpacker unpacker_;
 
     protected long start_;
@@ -53,7 +53,7 @@ public class MessagePackRecordReader implements RecordReader<LongWritable, Messa
         fileIn_ = fs.open(split.getPath());
 
         // Create streaming unpacker
-        unpacker_ = new Unpacker(fileIn_);
+        unpacker_ = msgPack_.createUnpacker(fileIn_);
 
         // Seek to the start of the split
         start_ = split.getStart();
@@ -86,8 +86,9 @@ public class MessagePackRecordReader implements RecordReader<LongWritable, Messa
 
     public boolean next(LongWritable key, MessagePackWritable val)
     throws IOException  {
-        for (MessagePackObject obj : unpacker_) {
-            key.set(fileIn_.getPos());
+        for (Value obj : unpacker_) {
+            pos_ = fileIn_.getPos();
+            key.set(pos_);
             val.set(obj);
             return true;
         }

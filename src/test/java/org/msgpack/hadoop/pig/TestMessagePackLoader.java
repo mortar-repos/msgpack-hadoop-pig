@@ -311,4 +311,21 @@ public class TestMessagePackLoader {
         };
         Assert.assertEquals(StringUtils.join(expected, "\n"), StringUtils.join(data, "\n"));
     }
+
+    @Test
+    public void truncateDecimalToInteger() throws IOException {
+        String input = mapInput;
+        String schema = "f: int, d: long";
+
+        pig.registerQuery(
+            "data = load '" + dataDir + input + "' " +
+            "using org.msgpack.hadoop.pig.MessagePackLoader('" + schema + "');"
+        );
+
+        Iterator<Tuple> data = pig.openIterator("data");
+        String[] expected = {
+            "(1,3)"
+        };
+        Assert.assertEquals(StringUtils.join(expected, "\n"), StringUtils.join(data, "\n"));
+    }
 }
